@@ -15,6 +15,6 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   setupSwagger(app);
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 5000);
 }
 bootstrap().catch((error: Error) => console.log(error.message));
