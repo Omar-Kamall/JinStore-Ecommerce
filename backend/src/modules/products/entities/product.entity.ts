@@ -6,6 +6,7 @@ import {
   OneToMany,
   CreateDateColumn,
   JoinColumn,
+  Index,
 } from 'typeorm';
 import { CategoryEntity } from '../../categories/entities/category.entity';
 import { WishlistEntity } from '../../wishlists/entities/wishlist.entity';
@@ -19,7 +20,8 @@ export class ProductEntity {
   id!: string;
 
   @Column({ type: 'varchar' })
-  name!: string;
+  @Index()
+  title!: string;
 
   @Column({ unique: true, type: 'varchar' })
   slug!: string;
@@ -65,4 +67,10 @@ export class ProductEntity {
 
   @OneToMany(() => OrderItemEntity, (orderItem) => orderItem.product)
   order_items!: OrderItemEntity[];
+
+  constructor(partial?: Partial<ProductEntity>) {
+    if (partial) {
+      Object.assign(this, partial);
+    }
+  }
 }

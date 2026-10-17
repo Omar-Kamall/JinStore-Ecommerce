@@ -6,7 +6,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { OrderEntity } from '../../orders/entities/order.entity';
-import { EPaymentMethod, EPaymentStatus } from '../../../common/enum';
+import { EPaymentMethod, EPaymentStatus } from '../../../common/enums';
 
 @Entity('payments')
 export class PaymentEntity {
@@ -40,4 +40,10 @@ export class PaymentEntity {
 
   @Column({ type: 'timestamp', nullable: true })
   paid_at!: Date;
+
+  constructor(partial?: Partial<PaymentEntity>) {
+    if (partial) {
+      Object.assign(this, partial);
+    }
+  }
 }

@@ -31,4 +31,10 @@ export class OrderItemEntity {
 
   @Column({ type: 'int' })
   quantity!: number;
+
+  constructor(partial?: Partial<OrderItemEntity>) {
+    if (partial) {
+      Object.assign(this, partial);
+    }
+  }
 }

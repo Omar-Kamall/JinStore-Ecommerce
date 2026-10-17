@@ -32,4 +32,10 @@ export class CouponEntity {
 
   @OneToMany(() => OrderEntity, (order) => order.coupon)
   orders!: OrderEntity[];
+
+  constructor(partial?: Partial<CouponEntity>) {
+    if (partial) {
+      Object.assign(this, partial);
+    }
+  }
 }

@@ -40,4 +40,10 @@ export class ChatMessageEntity {
 
   @CreateDateColumn()
   created_at!: Date;
+
+  constructor(partial?: Partial<ChatMessageEntity>) {
+    if (partial) {
+      Object.assign(this, partial);
+    }
+  }
 }

@@ -1,1 +1,1 @@
-export class CreateCouponDto {}
+export { CreateCouponDto } from '../entities/coupon.schema';

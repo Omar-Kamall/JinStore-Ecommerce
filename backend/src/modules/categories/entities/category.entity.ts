@@ -36,4 +36,10 @@ export class CategoryEntity {
 
   @OneToMany(() => ProductEntity, (product) => product.category)
   products!: ProductEntity[];
+
+  constructor(partial?: Partial<CategoryEntity>) {
+    if (partial) {
+      Object.assign(this, partial);
+    }
+  }
 }

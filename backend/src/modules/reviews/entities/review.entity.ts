@@ -38,4 +38,10 @@ export class ReviewEntity {
 
   @CreateDateColumn()
   created_at!: Date;
+
+  constructor(partial?: Partial<ReviewEntity>) {
+    if (partial) {
+      Object.assign(this, partial);
+    }
+  }
 }

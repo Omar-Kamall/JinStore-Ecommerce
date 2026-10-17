@@ -1,1 +1,1 @@
-export class CreateProductDto {}
+export { CreateProductDto } from '../entities/product.schema';

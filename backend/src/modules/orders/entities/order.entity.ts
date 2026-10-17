@@ -13,7 +13,7 @@ import { AddressEntity } from '../../addresses/entities/address.entity';
 import { CouponEntity } from '../../coupons/entities/coupon.entity';
 import { OrderItemEntity } from '../../order_items/entities/order_item.entity';
 import { PaymentEntity } from '../../payments/entities/payment.entity';
-import { EOrderStatus } from '../../../common/enum';
+import { EOrderStatus } from '../../../common/enums';
 
 @Entity('orders')
 export class OrderEntity {
@@ -69,4 +69,10 @@ export class OrderEntity {
 
   @OneToOne(() => PaymentEntity, (payment) => payment.order)
   payment!: PaymentEntity;
+
+  constructor(partial?: Partial<OrderEntity>) {
+    if (partial) {
+      Object.assign(this, partial);
+    }
+  }
 }

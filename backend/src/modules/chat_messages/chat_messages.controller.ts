@@ -1,8 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { ChatMessagesService } from './chat_messages.service';
 import { CreateChatMessageDto } from './dto/create-chat_message.dto';
 import { UpdateChatMessageDto } from './dto/update-chat_message.dto';
+import { AuthGuard } from '../../common/Guards/auth/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('chat-messages')
 export class ChatMessagesController {
   constructor(private readonly chatMessagesService: ChatMessagesService) {}
@@ -23,7 +34,10 @@ export class ChatMessagesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateChatMessageDto: UpdateChatMessageDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateChatMessageDto: UpdateChatMessageDto,
+  ) {
     return this.chatMessagesService.update(+id, updateChatMessageDto);
   }
 

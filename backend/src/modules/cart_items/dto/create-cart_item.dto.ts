@@ -1,1 +1,1 @@
-export class CreateCartItemDto {}
+export { CreateCartItemDto } from '../entities/cart_item.schema';

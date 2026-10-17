@@ -1,1 +1,1 @@
-export class CreateOtpDto {}
+export { CreateOtpDto } from '../entities/otp.schema';

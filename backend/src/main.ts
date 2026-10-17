@@ -1,7 +1,10 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { connectionDB } from '../config';
-import { setupSwagger } from '../config/swagger';
+import { connectionDB } from '../config/db.config';
+import { setupSwagger } from '../config/swagger.config';
+import { ZodValidationPipe } from 'nestjs-zod';
+import { ClassSerializerInterceptor } from '@nestjs/common';
+import { Logger } from 'nestjs-pino';
 
 async function bootstrap() {
   try {
@@ -13,8 +16,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.setGlobalPrefix('api');
+  app.useGlobalPipes(new ZodValidationPipe());
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+  app.useLogger(app.get(Logger));
   setupSwagger(app);
 
-  await app.listen(process.env.PORT ?? 5000);
+  await app.listen(process.env.PORT ?? 5050);
 }
 bootstrap().catch((error: Error) => console.log(error.message));

@@ -1,1 +1,1 @@
-export class CreatePaymentDto {}
+export { CreatePaymentDto } from '../entities/payment.schema';

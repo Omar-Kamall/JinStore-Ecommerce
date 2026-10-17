@@ -1,1 +1,1 @@
-export class CreateCategoryDto {}
+export { CreateCategoryDto } from '../entities/category.schema';

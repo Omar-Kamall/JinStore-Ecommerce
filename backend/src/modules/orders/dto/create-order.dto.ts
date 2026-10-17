@@ -1,1 +1,1 @@
-export class CreateOrderDto {}
+export { CreateOrderDto } from '../entities/order.schema';

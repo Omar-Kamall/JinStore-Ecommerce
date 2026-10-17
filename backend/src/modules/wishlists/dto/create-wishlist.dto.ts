@@ -1,1 +1,1 @@
-export class CreateWishlistDto {}
+export { CreateWishlistDto } from '../entities/wishlist.schema';

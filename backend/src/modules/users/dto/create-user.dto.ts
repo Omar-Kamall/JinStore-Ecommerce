@@ -1,1 +1,1 @@
-export class CreateUserDto {}
+export { CreateUserDto } from '../entities/user.schema';

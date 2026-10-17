@@ -34,4 +34,10 @@ export class WishlistEntity {
 
   @CreateDateColumn()
   added_at!: Date;
+
+  constructor(partial?: Partial<WishlistEntity>) {
+    if (partial) {
+      Object.assign(this, partial);
+    }
+  }
 }

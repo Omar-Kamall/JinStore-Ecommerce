@@ -7,7 +7,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { UserEntity } from '../../users/entities/user.entity';
-import { ENotificationType } from '../../../common/enum';
+import { ENotificationType } from '../../../common/enums';
 
 @Entity('notifications')
 export class NotificationEntity {
@@ -37,4 +37,10 @@ export class NotificationEntity {
 
   @CreateDateColumn()
   created_at!: Date;
+
+  constructor(partial?: Partial<NotificationEntity>) {
+    if (partial) {
+      Object.assign(this, partial);
+    }
+  }
 }

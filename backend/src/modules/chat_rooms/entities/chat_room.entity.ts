@@ -40,4 +40,10 @@ export class ChatRoomEntity {
     cascade: true,
   })
   messages!: ChatMessageEntity[];
+
+  constructor(partial?: Partial<ChatRoomEntity>) {
+    if (partial) {
+      Object.assign(this, partial);
+    }
+  }
 }

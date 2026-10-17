@@ -1,1 +1,1 @@
-export class CreateAddressDto {}
+export { CreateAddressDto } from '../entities/address.schema';

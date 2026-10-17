@@ -17,8 +17,9 @@ import { WishlistsModule } from './modules/wishlists/wishlists.module';
 import { CartItemsModule } from './modules/cart_items/cart_items.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { dbConfig } from '../config';
+import { dbConfig } from '../config/db.config';
 import { AddressesModule } from './modules/addresses/addresses.module';
+import { LoggingModule } from './infrastructure/observability/Logging/logging.module';
 
 @Module({
   imports: [
@@ -37,9 +38,10 @@ import { AddressesModule } from './modules/addresses/addresses.module';
     CouponsModule,
     OtpModule,
     AuthModule,
+    AddressesModule,
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot(dbConfig),
-    AddressesModule,
+    LoggingModule,
   ],
   controllers: [],
   providers: [AppService],

@@ -40,4 +40,10 @@ export class AddressEntity {
 
   @OneToMany(() => OrderEntity, (order) => order.address)
   orders!: OrderEntity[];
+
+  constructor(partial?: Partial<AddressEntity>) {
+    if (partial) {
+      Object.assign(this, partial);
+    }
+  }
 }

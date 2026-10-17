@@ -37,4 +37,10 @@ export class CartItemEntity {
 
   @CreateDateColumn()
   created_at!: Date;
+
+  constructor(partial?: Partial<CartItemEntity>) {
+    if (partial) {
+      Object.assign(this, partial);
+    }
+  }
 }

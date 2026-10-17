@@ -5,15 +5,15 @@ import {
   CreateDateColumn,
   OneToMany,
 } from 'typeorm';
-import { EUserRole } from '../../../common/enum';
-import { NotificationEntity } from '../../notifications/entities/notification.entity';
-import { ChatMessageEntity } from '../../chat_messages/entities/chat_message.entity';
-import { ChatRoomEntity } from '../../chat_rooms/entities/chat_room.entity';
-import { OrderEntity } from '../../orders/entities/order.entity';
+import { EUserRole } from '../../../common/enums';
+import { AddressEntity } from '../../addresses/entities/address.entity';
+import { WishlistEntity } from '../../wishlists/entities/wishlist.entity';
 import { ReviewEntity } from '../../reviews/entities/review.entity';
 import { CartItemEntity } from '../../cart_items/entities/cart_item.entity';
-import { WishlistEntity } from '../../wishlists/entities/wishlist.entity';
-import { AddressEntity } from '../../addresses/entities/address.entity';
+import { OrderEntity } from '../../orders/entities/order.entity';
+import { ChatRoomEntity } from '../../chat_rooms/entities/chat_room.entity';
+import { ChatMessageEntity } from '../../chat_messages/entities/chat_message.entity';
+import { NotificationEntity } from '../../notifications/entities/notification.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -21,7 +21,7 @@ export class UserEntity {
   id!: string;
 
   @Column({ type: 'varchar', nullable: true })
-  name!: string;
+  name!: string | null;
 
   @Column({ unique: true, type: 'varchar' })
   email!: string;
@@ -33,9 +33,9 @@ export class UserEntity {
   phone!: string;
 
   @Column({ type: 'enum', enum: EUserRole, default: EUserRole.CUSTOMER })
-  role!: EUserRole;
+  role!: EUserRole.CUSTOMER | EUserRole.VENDOR;
 
-  @Column({ type: 'boolean', default: true })
+  @Column({ type: 'boolean', default: false })
   is_active!: boolean;
 
   @CreateDateColumn()
@@ -47,11 +47,11 @@ export class UserEntity {
   @OneToMany(() => WishlistEntity, (wishlist) => wishlist.user)
   wishlists!: WishlistEntity[];
 
-  @OneToMany(() => CartItemEntity, (cartItem) => cartItem.user)
-  cart_items!: CartItemEntity[];
-
   @OneToMany(() => ReviewEntity, (review) => review.user)
   reviews!: ReviewEntity[];
+
+  @OneToMany(() => CartItemEntity, (cartItem) => cartItem.user)
+  cart_items!: CartItemEntity[];
 
   @OneToMany(() => OrderEntity, (order) => order.user)
   orders!: OrderEntity[];
@@ -67,4 +67,10 @@ export class UserEntity {
 
   @OneToMany(() => NotificationEntity, (notification) => notification.user)
   notifications!: NotificationEntity[];
+
+  constructor(partial?: Partial<UserEntity>) {
+    if (partial) {
+      Object.assign(this, partial);
+    }
+  }
 }
