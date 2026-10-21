@@ -1,4 +1,12 @@
-import { Controller, Post, Body, Patch } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Patch,
+  Res,
+  UseGuards,
+  Req,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { Message } from '../../common/decorators/message/message.decorator';
@@ -6,8 +14,13 @@ import {
   ForgotPasswordDto,
   LoginAuthDto,
   ResetPasswordDto,
+  VerifyAccountDto,
   VerifyOtpDto,
 } from './entities/auth.schema';
+import type { Request, Response } from 'express';
+import { genrateToken } from '../../utils/token';
+import { AuthGuard } from '../../common/Guards/auth/auth.guard';
+import type { IReqUser } from '../../common/interfaces';
 
 @Controller('auth')
 export class AuthController {
@@ -15,34 +28,69 @@ export class AuthController {
 
   @Post('register')
   @Message('User registered successfully')
-  create(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.create(createAuthDto);
+  async create(@Body() createAuthDto: CreateAuthDto) {
+    return await this.authService.create(createAuthDto);
   }
 
   @Post('login')
   @Message('User logged in successfully')
-  login(@Body() loginDto: LoginAuthDto) {
-    return this.authService.login(loginDto);
+  async login(@Body() loginDto: LoginAuthDto) {
+    return await this.authService.login(loginDto);
   }
 
   @Post('forgot-password')
   @Message('Otp Sent successfully')
-  forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
-    return this.authService.forgotPassword(forgotPasswordDto);
+  async forgotPassword(
+    @Body() forgotPasswordDto: ForgotPasswordDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const token = genrateToken({ email: forgotPasswordDto.email }, '5m');
+    res.cookie('forget-password-token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'prodMode',
+      sameSite: 'strict',
+      maxAge: 5 * 60 * 1000,
+    });
+
+    return await this.authService.forgotPassword(forgotPasswordDto);
   }
 
+  @Post('verify-account')
+  @Message('Otp Sent successfully')
+  async verifyAccount(
+    @Body() verifyAccountDto: VerifyAccountDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const token = genrateToken({ email: verifyAccountDto.email }, '5m');
+    res.cookie('verify-account-token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'prodMode',
+      sameSite: 'strict',
+      maxAge: 300000,
+    });
+
+    return await this.authService.verifyAccount(verifyAccountDto);
+  }
+
+  @UseGuards(AuthGuard)
   @Post('verify-reset-otp')
   @Message('Otp Rigstered successfully')
-  verifyResetOtp(@Body() verifyOtpDto: VerifyOtpDto) {
-    const email = 'test@test.com';
-
-    return this.authService.verifyResetOtp(verifyOtpDto, email);
+  async verifyResetOtp(
+    @Body() verifyOtpDto: VerifyOtpDto,
+    @Req() req: IReqUser,
+  ) {
+    const email = req.user.email;
+    return await this.authService.verifyResetOtp(verifyOtpDto, email);
   }
 
+  @UseGuards(AuthGuard)
   @Patch('reset-password')
   @Message('Password reset successfully')
-  resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
-    const email = 'test@test.com';
-    return this.authService.resetPassword(resetPasswordDto, email);
+  async resetPassword(
+    @Body() resetPasswordDto: ResetPasswordDto,
+    @Req() req: IReqUser,
+  ) {
+    const email = req.user.email;
+    return await this.authService.resetPassword(resetPasswordDto, email);
   }
 }

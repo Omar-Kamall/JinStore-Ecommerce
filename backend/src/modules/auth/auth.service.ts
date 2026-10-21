@@ -14,6 +14,7 @@ import {
   ForgotPasswordDto,
   LoginAuthDto,
   ResetPasswordDto,
+  VerifyAccountDto,
   VerifyOtpDto,
 } from './entities/auth.schema';
 
@@ -70,6 +71,12 @@ export class AuthService {
     if (!user) {
       this.logger.warn('Login rejected: email not found');
       throw new AppError('Invalid email or password', HttpStatus.CONFLICT);
+    } else if (!user.is_active) {
+      this.logger.warn('Login rejected: email not active');
+      throw new AppError(
+        'Email not Active Please active Account',
+        HttpStatus.CONFLICT,
+      );
     }
 
     const isPasswordValid = await compareHashPassword(
@@ -85,7 +92,7 @@ export class AuthService {
 
     return UserMapper.toResponse(user);
   }
-
+  // otp
   async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
     const user = await this.userRepository.findOne({
       where: { email: forgotPasswordDto.email },
@@ -102,11 +109,29 @@ export class AuthService {
     return;
   }
 
-  verifyResetOtp(verifyOtpDto: VerifyOtpDto, email: string) {
+  async verifyAccount(verifyAccountDto: VerifyAccountDto) {
+    const user = await this.userRepository.findOne({
+      where: { email: verifyAccountDto.email },
+    });
+    if (!user) {
+      this.logger.warn('Forget Password rejected: email not found');
+      throw new AppError('Checked Your Email', HttpStatus.CONFLICT);
+    }
+
+    // send otp code
+
+    this.logger.info('Otp Sent successfully');
     // verify otp service
-    return { verifyOtpDto, email };
+    return;
   }
 
+  async verifyResetOtp(verifyOtpDto: VerifyOtpDto, email: string) {
+    await this.userRepository.find();
+    // verify otp service
+    console.log({ verifyOtpDto, email });
+    return;
+  }
+  // otp
   async resetPassword(resetPasswordDto: ResetPasswordDto, email: string) {
     const user = await this.userRepository.findOne({
       where: { email },

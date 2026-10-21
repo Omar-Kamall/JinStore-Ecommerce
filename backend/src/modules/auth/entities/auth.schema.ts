@@ -40,6 +40,12 @@ export const forgetPasswordSchema = z
   })
   .strict();
 
+export const verifyAccountSchema = z
+  .object({
+    email: z.string().trim().email('Invalid email address'),
+  })
+  .strict();
+
 export const resetPasswordSchema = z
   .object({
     password: z.string().trim().min(8, 'Password is required'),
@@ -81,6 +87,11 @@ export class ForgotPasswordDto extends createZodDto(forgetPasswordSchema) {
   email!: string;
 }
 
+export class VerifyAccountDto extends createZodDto(verifyAccountSchema) {
+  @ApiProperty({ example: 'example@example.com' })
+  email!: string;
+}
+
 export class VerifyOtpDto extends createZodDto(verifyOtpSchema) {
   @ApiProperty({
     example: '123456',
@@ -104,5 +115,6 @@ export class ResetPasswordDto extends createZodDto(resetPasswordSchema) {
 export type CreateAuthType = z.infer<typeof createAuthSchema>;
 export type LoginAuthType = z.infer<typeof loginAuthSchema>;
 export type ForgotPasswordType = z.infer<typeof forgetPasswordSchema>;
+export type VerifyAccountType = z.infer<typeof verifyAccountSchema>;
 export type VerifyOtpType = z.infer<typeof verifyOtpSchema>;
 export type ResetPasswordType = z.infer<typeof resetPasswordSchema>;
