@@ -30,10 +30,10 @@ export class UserEntity {
   password!: string;
 
   @Column({ type: 'varchar', nullable: true })
-  phone!: string;
+  phone!: string | null;
 
   @Column({ type: 'enum', enum: EUserRole, default: EUserRole.CUSTOMER })
-  role!: EUserRole.CUSTOMER | EUserRole.VENDOR;
+  role!: EUserRole.CUSTOMER | EUserRole.VENDOR | EUserRole.ADMIN;
 
   @Column({ type: 'boolean', default: false })
   is_active!: boolean;

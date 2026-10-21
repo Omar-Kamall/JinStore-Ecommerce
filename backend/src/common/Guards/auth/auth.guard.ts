@@ -34,6 +34,11 @@ export class AuthGuard implements CanActivate {
         );
 
       const decodedToken = decodeToken(token) as IUser;
+      // if (!decodedToken.email && !decodedToken.id && !decodedToken.role)
+      //   throw new AppError(
+      //     'Unauthorized: Invalid or expired token',
+      //     HttpStatus.UNAUTHORIZED,
+      //   );
       req.user = decodedToken;
 
       return true;
