@@ -3,6 +3,6 @@ import { UserEntity } from './entities/user.entity';
 
 export class UserMapper {
   static toResponse(user: UserEntity) {
-    return userResponseSchema.parse(user);
+    return userResponseSchema.parse({ ...user, phone: user.phone ?? '' });
   }
 }

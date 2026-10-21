@@ -20,6 +20,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { dbConfig } from '../config/db.config';
 import { AddressesModule } from './modules/addresses/addresses.module';
 import { LoggingModule } from './infrastructure/observability/Logging/logging.module';
+import { APP_FILTER } from '@nestjs/core';
+import { GlobalExceptionsFilter } from './common/filters/global-exceptios/global-exceptios.filter';
 
 @Module({
   imports: [
@@ -44,6 +46,12 @@ import { LoggingModule } from './infrastructure/observability/Logging/logging.mo
     LoggingModule,
   ],
   controllers: [],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: GlobalExceptionsFilter,
+    },
+  ],
 })
 export class AppModule {}

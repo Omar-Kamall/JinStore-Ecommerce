@@ -4,7 +4,7 @@ import * as jwt from 'jsonwebtoken';
 interface ITokenPayload {
   id?: string;
   email: string;
-  role?: EUserRole.CUSTOMER | EUserRole.VENDOR;
+  role?: EUserRole.CUSTOMER | EUserRole.VENDOR | EUserRole.ADMIN;
 }
 const secrectKey = process.env.JWT_SECRET || 'secret-key';
 

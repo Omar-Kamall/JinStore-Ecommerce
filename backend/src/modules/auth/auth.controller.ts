@@ -17,7 +17,7 @@ import {
   VerifyAccountDto,
   VerifyOtpDto,
 } from './entities/auth.schema';
-import type { Request, Response } from 'express';
+import type { Response } from 'express';
 import { genrateToken } from '../../utils/token';
 import { AuthGuard } from '../../common/Guards/auth/auth.guard';
 import type { IReqUser } from '../../common/interfaces';
@@ -28,14 +28,40 @@ export class AuthController {
 
   @Post('register')
   @Message('User registered successfully')
-  async create(@Body() createAuthDto: CreateAuthDto) {
+  async create(
+    @Body() createAuthDto: CreateAuthDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const token = genrateToken({ email: createAuthDto.email }, '5m');
+    res.cookie('verify-account-token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'prodMode',
+      sameSite: 'strict',
+      maxAge: 5 * 60 * 1000,
+    });
     return await this.authService.create(createAuthDto);
   }
 
   @Post('login')
   @Message('User logged in successfully')
-  async login(@Body() loginDto: LoginAuthDto) {
-    return await this.authService.login(loginDto);
+  async login(
+    @Body() loginDto: LoginAuthDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const user = await this.authService.login(loginDto);
+
+    const token = genrateToken(
+      { id: user.id, email: loginDto.email, role: user.role },
+      '1d',
+    );
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'prodMode',
+      sameSite: 'strict',
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
+    return user;
   }
 
   @Post('forgot-password')
@@ -66,7 +92,7 @@ export class AuthController {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'prodMode',
       sameSite: 'strict',
-      maxAge: 300000,
+      maxAge: 5 * 60 * 1000,
     });
 
     return await this.authService.verifyAccount(verifyAccountDto);

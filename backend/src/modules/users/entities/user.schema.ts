@@ -24,7 +24,7 @@ export const userSchema = z
       .optional(),
 
     role: z
-      .enum([EUserRole.CUSTOMER, EUserRole.VENDOR])
+      .enum([EUserRole.CUSTOMER, EUserRole.VENDOR, EUserRole.ADMIN])
       .default(EUserRole.CUSTOMER)
       .optional(),
   })
@@ -62,7 +62,7 @@ export class CreateUserDto extends createZodDto(createUserSchema) {
     enum: EUserRole,
     default: EUserRole.CUSTOMER,
   })
-  role?: EUserRole.CUSTOMER | EUserRole.VENDOR;
+  role?: EUserRole.CUSTOMER | EUserRole.VENDOR | EUserRole.ADMIN;
 }
 
 export class UpdateUserDto extends createZodDto(updateUserSchema) {
